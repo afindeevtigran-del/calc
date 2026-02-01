@@ -1,86 +1,161 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Калькулятор прибыли</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-    }
-    .card {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      font-size: 16px;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .result {
-      margin-top: 15px;
-      font-size: 14px;
-      white-space: pre-line;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Калькулятор накоплений</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+  padding: 30px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 20px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #43a047;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: right;
+}
+
+th {
+  background: #f4f6f8;
+}
+
+th:first-child,
+td:first-child {
+  text-align: center;
+}
+
+.caption {
+  margin-top: 20px;
+  font-size: 15px;
+  color: #555;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
-  <h2>📈 Калькулятор прибыли</h2>
+<div class="container">
+  <h1>💰 Калькулятор накоплений</h1>
 
-  <label>Начальная сумма</label>
-  <input type="number" id="sum" value="100000">
+  <div class="inputs">
+    <div>
+      <label>Начальная сумма</label>
+      <input type="number" id="sum" value="100000">
+    </div>
 
-  <label>Количество месяцев</label>
-  <input type="number" id="months" value="12">
+    <div>
+      <label>Количество месяцев</label>
+      <input type="number" id="months" value="12">
+    </div>
+  </div>
 
-  <button onclick="calculate()">Посчитать</button>
+  <button onclick="calculate()">Рассчитать</button>
 
-  <div class="result" id="result"></div>
+  <table id="table" style="display:none;">
+    <thead>
+      <tr>
+        <th>Месяц</th>
+        <th>20% (накопительный)</th>
+        <th>15% (обычный)</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div class="caption">
+    🔹 <b>20% (накопительный)</b> — сложный процент (эффективная ставка)<br>
+    🔹 <b>15% (обычный)</b> — номинальная ставка, начисление по месяцам
+  </div>
 </div>
 
 <script>
 function calculate() {
-  const initialSum = Number(document.getElementById("sum").value);
+  const initial = Number(document.getElementById("sum").value);
   const months = Number(document.getElementById("months").value);
 
-  const rates = {
-    "20% эффективная": Math.pow(1 + 0.20, 1/12) - 1,
-    "15% эффективная": Math.pow(1 + 0.15, 1/12) - 1
-  };
+  const rate20 = Math.pow(1 + 0.20, 1/12) - 1; // накопительный
+  const rate15 = 0.15 / 12;                  // обычный
 
-  let output = "";
+  let balance20 = initial;
+  let balance15 = initial;
 
-  for (let name in rates) {
-    let balance = initialSum;
-    output += name + "\n";
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
 
-    for (let m = 1; m <= months; m++) {
-      let profit = balance * rates[name];
-      balance += profit;
-      output += `Месяц ${m}: +${profit.toFixed(2)} → ${balance.toFixed(2)}\n`;
-    }
-    output += "\n";
+  for (let i = 1; i <= months; i++) {
+    balance20 += balance20 * rate20;
+    balance15 += balance15 * rate15;
+
+    const row = `
+      <tr>
+        <td>${i}</td>
+        <td>${balance20.toFixed(2)}</td>
+        <td>${balance15.toFixed(2)}</td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
   }
 
-  document.getElementById("result").innerText = output;
+  document.getElementById("table").style.display = "table";
 }
 </script>
 

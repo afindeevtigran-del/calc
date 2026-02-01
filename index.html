@@ -12,48 +12,48 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: auto;
   background: white;
-  padding: 30px;
-  border-radius: 16px;
+  padding: 35px;
+  border-radius: 18px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 }
 
 .inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 25px;
+  margin-bottom: 25px;
 }
 
 label {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   display: block;
 }
 
 input {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   font-size: 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #ccc;
 }
 
 button {
   width: 100%;
-  padding: 15px;
+  padding: 16px;
   font-size: 20px;
   background: #4CAF50;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
@@ -63,28 +63,31 @@ button:hover {
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 25px;
-  font-size: 16px;
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: right;
+  border-collapse: separate;
+  border-spacing: 25px 12px;
+  margin-top: 30px;
+  font-size: 17px;
 }
 
 th {
   background: #f4f6f8;
-}
-
-th:first-child,
-td:first-child {
+  padding: 14px;
+  border-radius: 10px;
   text-align: center;
 }
 
+td {
+  padding: 12px;
+  text-align: right;
+}
+
+td:first-child {
+  text-align: center;
+  font-weight: bold;
+}
+
 .caption {
-  margin-top: 20px;
+  margin-top: 25px;
   font-size: 15px;
   color: #555;
 }
@@ -115,15 +118,17 @@ td:first-child {
       <tr>
         <th>Месяц</th>
         <th>20% (накопительный)</th>
+        <th>Чистая прибыль</th>
         <th>15% (обычный)</th>
+        <th>Чистая прибыль</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
 
   <div class="caption">
-    🔹 <b>20% (накопительный)</b> — сложный процент (эффективная ставка)<br>
-    🔹 <b>15% (обычный)</b> — номинальная ставка, начисление по месяцам
+    🔹 <b>20% (накопительный)</b> — номинальная ставка, 20% / 12<br>
+    🔹 <b>15% (обычный)</b> — номинальная ставка, 15% / 12
   </div>
 </div>
 
@@ -132,8 +137,8 @@ function calculate() {
   const initial = Number(document.getElementById("sum").value);
   const months = Number(document.getElementById("months").value);
 
-  const rate20 = Math.pow(1 + 0.20, 1/12) - 1; // накопительный
-  const rate15 = 0.15 / 12;                  // обычный
+  const rate20 = 0.20 / 12; // номинальная
+  const rate15 = 0.15 / 12; // номинальная
 
   let balance20 = initial;
   let balance15 = initial;
@@ -145,14 +150,18 @@ function calculate() {
     balance20 += balance20 * rate20;
     balance15 += balance15 * rate15;
 
-    const row = `
+    const profit20 = balance20 - initial;
+    const profit15 = balance15 - initial;
+
+    tbody.innerHTML += `
       <tr>
         <td>${i}</td>
         <td>${balance20.toFixed(2)}</td>
+        <td>${profit20.toFixed(2)}</td>
         <td>${balance15.toFixed(2)}</td>
+        <td>${profit15.toFixed(2)}</td>
       </tr>
     `;
-    tbody.innerHTML += row;
   }
 
   document.getElementById("table").style.display = "table";

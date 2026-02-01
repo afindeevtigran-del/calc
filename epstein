@@ -1,0 +1,18 @@
+def profit_by_months(initial_sum, months=12):
+    rates = {
+        "20% эффективная": (1 + 0.20) ** (1 / 12) - 1,
+        "15% эффективная": (1 + 0.15) ** (1 / 12) - 1
+    }
+
+    for name, monthly_rate in rates.items():
+        print(f"\n{name}")
+        balance = initial_sum
+
+        for month in range(1, months + 1):
+            profit = balance * monthly_rate
+            balance += profit
+            print(f"Месяц {month}: прибыль = {profit:.2f}, сумма = {balance:.2f}")
+
+
+# пример
+profit_by_months(100000)

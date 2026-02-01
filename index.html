@@ -127,8 +127,8 @@ td:first-child {
   </table>
 
   <div class="caption">
-    🔹 <b>20% (накопительный)</b> — номинальная ставка, 20% / 12<br>
-    🔹 <b>15% (обычный)</b> — номинальная ставка, 15% / 12
+    🔹 <b>20%</b> — эффективная годовая ставка (сложный процент)<br>
+    🔹 <b>15%</b> — эффективная годовая ставка
   </div>
 </div>
 
@@ -137,8 +137,8 @@ function calculate() {
   const initial = Number(document.getElementById("sum").value);
   const months = Number(document.getElementById("months").value);
 
-  const rate20 = 0.20 / 12; // номинальная
-  const rate15 = 0.15 / 12; // номинальная
+  const rate20 = Math.pow(1 + 0.20, 1/12) - 1;
+  const rate15 = Math.pow(1 + 0.15, 1/12) - 1;
 
   let balance20 = initial;
   let balance15 = initial;

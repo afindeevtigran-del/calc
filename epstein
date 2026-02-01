@@ -1,18 +1,88 @@
-def profit_by_months(initial_sum, months=12):
-    rates = {
-        "20% эффективная": (1 + 0.20) ** (1 / 12) - 1,
-        "15% эффективная": (1 + 0.15) ** (1 / 12) - 1
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Калькулятор прибыли</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
     }
+    .card {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
 
-    for name, monthly_rate in rates.items():
-        print(f"\n{name}")
-        balance = initial_sum
+<div class="card">
+  <h2>📈 Калькулятор прибыли</h2>
 
-        for month in range(1, months + 1):
-            profit = balance * monthly_rate
-            balance += profit
-            print(f"Месяц {month}: прибыль = {profit:.2f}, сумма = {balance:.2f}")
+  <label>Начальная сумма</label>
+  <input type="number" id="sum" value="100000">
 
+  <label>Количество месяцев</label>
+  <input type="number" id="months" value="12">
 
-# пример
-profit_by_months(100000)
+  <button onclick="calculate()">Посчитать</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function calculate() {
+  const initialSum = Number(document.getElementById("sum").value);
+  const months = Number(document.getElementById("months").value);
+
+  const rates = {
+    "20% эффективная": Math.pow(1 + 0.20, 1/12) - 1,
+    "15% эффективная": Math.pow(1 + 0.15, 1/12) - 1
+  };
+
+  let output = "";
+
+  for (let name in rates) {
+    let balance = initialSum;
+    output += name + "\n";
+
+    for (let m = 1; m <= months; m++) {
+      let profit = balance * rates[name];
+      balance += profit;
+      output += `Месяц ${m}: +${profit.toFixed(2)} → ${balance.toFixed(2)}\n`;
+    }
+    output += "\n";
+  }
+
+  document.getElementById("result").innerText = output;
+}
+</script>
+
+</body>
+</html>
